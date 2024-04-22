@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="robot_description"
+        command="$(find xacro)/xacro $(find four_wheel_steering_robot_description)/robots/robot.urdf.xacro" />
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="paused" value="false" />
+        <arg name="use_sim_time" value="true" />
+        <arg name="gui" value="true" />
+        <arg name="headless" value="false" />
+        <arg name="debug" value="false" />
+    </include>
+
+    <node name="spawn_robot" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -param robot_description -model miniAGV" />
+</launch>

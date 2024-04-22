@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find four_wheel_steering_robot_description)/urdf/robot_constants.xacro" />
+    <xacro:include filename="$(find four_wheel_steering_robot_description)/urdf/inertial_macros.xacro" />
+
+
+    <!-- WHEEL MODULE-->
+
+    <xacro:macro name="wheel_module" params="suffix parent_link reflectx reflecty">
+
+        <gazebo reference="wheel_support${suffix}">
+            <mu1>0.05</mu1>
+            <mu2>0.05</mu2>
+            <material>Gazebo/Red</material>
+        </gazebo>
+
+        <gazebo reference="wheel${suffix}">
+            <mu1>1.2</mu1>
+            <mu2>1.2</mu2>
+            <material>Gazebo/Blue</material>
+        </gazebo>
+
+        <gazebo reference="marker${suffix}">
+            <material>Gazebo/Green</material>
+        </gazebo>
+
+        <!-- WHEEL SUPPPORT-->
+
+        <joint name="wheel_support${suffix}_joint" type="revolute">
+            <parent link="${parent_link}" />
+            <child link="wheel_support${suffix}" />
+            <origin
+                xyz="${reflectx * (chassis_link_length/2 - wheel_support_link_radius)} ${reflecty * (chassis_link_breadth/2 - wheel_support_link_radius)} 0" />
+            <axis xyz="0 0 -1" />
+            <limit effort="${limits_revolute_effort}" velocity="${limits_revolute_velocity}"
+                lower="${limits_revolute_lower}" upper="${limits_revolute_upper}" />
+        </joint>
+
+        <link name="wheel_support${suffix}">
+            <visual>
+                <origin xyz="0 0 ${-wheel_support_link_length/2}" />
+                <geometry>
+                    <cylinder radius="${wheel_support_link_radius}"
+                        length="${wheel_support_link_length}" />
+                </geometry>
+                <material name="red">
+                    <color rgba="1 0 0 1" />
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 ${-wheel_support_link_length/2}" />
+                <geometry>
+                    <cylinder radius="${wheel_support_link_radius}"
+                        length="${wheel_support_link_length}" />
+                </geometry>
+            </collision>
+            <xacro:inertial_cylinder mass="0.08" radius="${wheel_support_link_radius}"
+                length="${wheel_support_link_length}">
+                <origin xyz="0 0 ${-wheel_support_link_length/2}" rpy="0 0 0" />
+            </xacro:inertial_cylinder>
+        </link>
+
+        <transmission name="trans_chassis_wheel_support${suffix}" type="SimpleTransmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <actuator name="motor_steer${suffix}_joint">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+            <joint name="wheel_support${suffix}_joint">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+
+
+        <!-- WHEEL-->
+
+        <joint name="wheel${suffix}_joint" type="continuous">
+            <parent link="wheel_support${suffix}" />
+            <child link="wheel${suffix}" />
+            <origin xyz="0 0 ${-wheel_support_link_length - wheel_link_radius}"
+                rpy="${-pi/2} 0 ${pi/2}" />
+            <axis xyz="0 0 1" />
+        </joint>
+
+        <link name="wheel${suffix}">
+            <visual>
+                <origin xyz="0 0 0" />
+                <geometry>
+                    <cylinder radius="${wheel_link_radius}" length="${wheel_link_width}" />
+                </geometry>
+                <material name="blue">
+                    <color rgba="0 0 1 1" />
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" />
+                <geometry>
+                    <cylinder radius="${wheel_link_radius}" length="${wheel_link_width}" />
+                </geometry>
+            </collision>
+            <xacro:inertial_cylinder mass="0.1" radius="${wheel_link_radius}"
+                length="${wheel_link_width}">
+                <origin xyz="0 0 0" rpy="0 0 0" />
+            </xacro:inertial_cylinder>
+        </link>
+
+        <joint name="marker${suffix}_joint" type="fixed">
+            <parent link="wheel${suffix}"/>
+            <child link="marker${suffix}"/>
+            <origin xyz="${wheel_link_radius/2} 0 0"/>
+        </joint>
+
+        <link name="marker${suffix}">
+            <visual>
+                <origin xyz="0 0 0"/>
+                <geometry>
+                    <box size="${wheel_link_radius} ${wheel_link_radius/6} ${wheel_link_width + wheel_link_width*0.1}"/>
+                </geometry>
+                <material name="markerMaterial">
+                    <color rgba="0 1 0 1"/>
+                </material>
+            </visual>
+        </link>
+
+        <transmission name="trans_wheel_support${suffix}_wheel${suffix}" type="SimpleTransmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <actuator name="motor_wheel${suffix}_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+            <joint name="wheel${suffix}_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+
+    </xacro:macro>
+
+</robot>

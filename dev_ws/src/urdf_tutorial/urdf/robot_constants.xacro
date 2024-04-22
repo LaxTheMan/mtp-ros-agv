@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- LINK DIMENSIONS-->
+    <xacro:property name="chassis_link_length" value="0.4" />
+    <xacro:property name="chassis_link_breadth" value="0.5" />
+    <xacro:property name="chassis_link_height" value="0.02" />
+
+    <xacro:property name="wheel_support_link_radius" value="0.0254" />
+    <xacro:property name="wheel_support_link_length" value="0.1" />
+
+    <xacro:property name="wheel_link_radius" value="0.0762" />
+    <xacro:property name="wheel_link_width" value="0.0508" />
+
+    <!-- JOINT LIMITS-->
+
+    <xacro:property name="limits_revolute_upper" value="3.14" />
+    <xacro:property name="limits_revolute_lower" value="-3.14" />
+    <xacro:property name="limits_revolute_velocity" value="3.14" />
+    <xacro:property name="limits_revolute_effort" value="300" />
+
+</robot>

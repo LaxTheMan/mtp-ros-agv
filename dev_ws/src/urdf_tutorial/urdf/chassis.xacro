@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="robot_constants.xacro" />
+    <xacro:include filename="inertial_macros.xacro" />
+
+    <!-- CHASSIS-->
+
+    <xacro:macro name="chassis">
+
+        <gazebo reference="chassis">
+            <mu1>0.2</mu1>
+            <mu2>0.2</mu2>
+            <material>Gazebo/Green</material>
+        </gazebo>
+
+        <link name="base_link">
+        </link>
+
+        <joint name="chassis_joint" type="fixed">
+            <parent link="base_link" />
+            <child link="chassis" />
+            <origin xyz="0 0 0.25" />
+        </joint>
+
+        <link name="chassis">
+            <visual>
+                <origin xyz="0 0 ${chassis_link_height/2}" />
+                <geometry>
+                    <box
+                        size="${chassis_link_length} ${chassis_link_breadth} ${chassis_link_height}" />
+                </geometry>
+                <material name="white">
+                    <color rgba="1 1 1 1" />
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 ${chassis_link_height/2}" />
+                <geometry>
+                    <box
+                        size="${chassis_link_length} ${chassis_link_breadth} ${chassis_link_height}" />
+                </geometry>
+            </collision>
+            <xacro:inertial_box mass="0.5" x="${chassis_link_length}" y="${chassis_link_breadth}"
+                z="${chassis_link_height}">
+                <origin xyz="0 0 ${chassis_link_height/2}" rpy="0 0 0" />
+            </xacro:inertial_box>
+        </link>
+
+    </xacro:macro>
+
+</robot>

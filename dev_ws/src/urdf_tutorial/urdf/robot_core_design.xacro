@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="chassis.xacro"/>
+    <xacro:include filename="wheel_module.xacro"/>
+
+    <xacro:chassis />
+
+    <xacro:wheel_module suffix="FL" parent_link="chassis" reflectx="-1" reflecty="1" />
+    <xacro:wheel_module suffix="FR" parent_link="chassis" reflectx="1" reflecty="1" />
+    <xacro:wheel_module suffix="RL" parent_link="chassis" reflectx="-1" reflecty="-1" />
+    <xacro:wheel_module suffix="RR" parent_link="chassis" reflectx="1" reflecty="-1" />
+    
+
+</robot>
